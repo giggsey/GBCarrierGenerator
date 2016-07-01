@@ -1,0 +1,12 @@
+{
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Joshua Gigg",
+      "email": "giggsey@gmail.com"
+    }
+  ],
+  "require": {
+    "phpexcel/phpexcel": "^1.7"
+  }
+}
