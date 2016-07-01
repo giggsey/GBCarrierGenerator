@@ -63,7 +63,8 @@ foreach ($worksheet->getRowIterator() as $row) {
 
     foreach ($permittedPrefixes as $permittedPrefix) {
         if (substr($prefix, 0, strlen($permittedPrefix)) === $permittedPrefix) {
-            $carriers[$prefix] = $carrier;
+            // Add GB prefix
+            $carriers['44' . $prefix] = $carrier;
         }
     }
 }
