@@ -10,67 +10,93 @@
 require __DIR__ . '/vendor/autoload.php';
 
 /*
- * Carrier list of Mobile (07x) range provided by Ofcom
+ * Carrier Lists, provided by Ofcom
+ * @see http://static.ofcom.org.uk/static/numbering/index.htm
  */
 
-$carrierURL = "http://www.ofcom.org.uk/static/numbering/S7.xls";
-
-$permittedPrefixes = [
-    '71',
-    '72',
-    '73',
-    '74',
-    '75',
-    '76', // Pagers, apart from 7624 (Isle of Man mobile)
-    '77',
-    '78',
-    '79',
+$carrierURLs = [
+    "http://www.ofcom.org.uk/static/numbering/S7.xls",
 ];
-
-/*
- * Save file locally
- */
-$localFileName = tempnam(sys_get_temp_dir(), 'OfcomS7');
-
-$bytesWritten = file_put_contents($localFileName, fopen($carrierURL, 'r'));
-
-if ($bytesWritten === 0) {
-    echo "Unable to download file from Ofcom" . PHP_EOL;
-    exit;
-}
-
-$excel = PHPExcel_IOFactory::load($localFileName);
-
-$worksheet = $excel->getActiveSheet();
-
 
 $carriers = [];
 
-foreach ($worksheet->getRowIterator() as $row) {
-    if ($row->getRowIndex() === 1) {
-        // Ignore header row
-        continue;
-    }
 
-    $prefix = trim($worksheet->getCellByColumnAndRow(0, $row->getRowIndex())->getValue())
-        . trim($worksheet->getCellByColumnAndRow(1, $row->getRowIndex())->getValue());
-
-    $carrier = $worksheet->getCellByColumnAndRow(4, $row->getRowIndex())->getValue();
+foreach ($carrierURLs as $carrierURL) {
 
     /*
-     * Ensure it's a permitted prefix
+     * Save file locally
      */
+    $localName = explode('/', $carrierURL);
+    $localFileName = tempnam(sys_get_temp_dir(), end($localName));
 
-    foreach ($permittedPrefixes as $permittedPrefix) {
-        if (substr($prefix, 0, strlen($permittedPrefix)) === $permittedPrefix) {
-            // Add GB prefix
+    $bytesWritten = file_put_contents($localFileName, fopen($carrierURL, 'r'));
+
+    if ($bytesWritten === 0) {
+        echo "Unable to download file from Ofcom" . PHP_EOL;
+        exit;
+    }
+
+    $excel = PHPExcel_IOFactory::load($localFileName);
+
+    $worksheet = $excel->getActiveSheet();
+
+
+    foreach ($worksheet->getRowIterator() as $row) {
+        if ($row->getRowIndex() === 1) {
+
+            /*
+             * Work out which columns to use
+             */
+
+            $commsProviderColumn = null;
+            $changeColumn = null;
+            $statusColumn = null;
+
+            $column = 0;
+            $data = $worksheet->getCellByColumnAndRow($column, $row->getRowIndex())->getValue();
+            while ($data != '') {
+                if ($data == 'Communications Provider') {
+                    $commsProviderColumn = $column;
+                } elseif ($data == 'Change') {
+                    $changeColumn = $column;
+                } elseif ($data == 'Status') {
+                    $statusColumn = $column;
+                }
+
+                $column++;
+                $data = $worksheet->getCellByColumnAndRow($column, $row->getRowIndex())->getValue();
+            }
+
+            if ($changeColumn === null || $commsProviderColumn === null || $statusColumn === null) {
+                throw new RuntimeException("Unable to find columns! {$changeColumn} - {$commsProviderColumn} - {$statusColumn}");
+            }
+
+            continue;
+        }
+
+        $prefix = trim($worksheet->getCellByColumnAndRow(0, $row->getRowIndex())->getValue())
+            . trim($worksheet->getCellByColumnAndRow(1, $row->getRowIndex())->getValue());
+
+        $allocated = trim($worksheet->getCellByColumnAndRow($statusColumn, $row->getRowIndex())->getValue());
+
+        if ($allocated == 'Allocated') {
+            $carrier = $worksheet->getCellByColumnAndRow($commsProviderColumn, $row->getRowIndex())->getValue();
+            $date = $worksheet->getCellByColumnAndRow($changeColumn, $row->getRowIndex())->getValue();
+
+            $UNIX_DATE = ($date - 25569) * 86400;
+            $date = gmdate('Y-m-d', $UNIX_DATE);
+            /*
+             * Ensure it's a permitted prefix
+             */
+
             $carriers['44' . $prefix] = $carrier;
         }
     }
+
+    // Delete temp file
+    @unlink($localFileName);
 }
 
-// Delete temp file
-@unlink($localFileName);
 
 /*
  * Compress data
@@ -109,7 +135,7 @@ foreach ($carriers as $prefix => $carrier) {
         }
 
         if ($allChildren === true) {
-            $result = array_unique($childEntries);
+            $result = array_unique($childEntries, SORT_REGULAR);
 
             $removeChildren = false;
 
@@ -126,11 +152,24 @@ foreach ($carriers as $prefix => $carrier) {
                     $carriers[$numberToCheck] = $childrenEntry;
                     $removeChildren = true;
                 }
-            }
 
-            if ($removeChildren === true) {
+                if ($removeChildren === true) {
+                    foreach ($childNumbers as $childNumber) {
+                        unset($carriers[$numberToCheck . $childNumber]);
+                    }
+                }
+            } elseif (count($result) < count($childNumbers)) {
+                // Set a new master with the majority carrier
+                $values = array_count_values($childEntries);
+
+                $maxCarrier = array_search(max($values), $values); // We only want the top result
+
+                $carriers[$numberToCheck] = $maxCarrier;
+
                 foreach ($childNumbers as $childNumber) {
-                    unset($carriers[$numberToCheck . $childNumber]);
+                    if ($carriers[$numberToCheck . $childNumber] == $maxCarrier) {
+                        unset($carriers[$numberToCheck . $childNumber]);
+                    }
                 }
             }
         }
@@ -142,9 +181,110 @@ foreach ($carriers as $prefix => $carrier) {
 ksort($carriers, SORT_STRING);
 
 /*
- * Output result
+ * Write to a text file
  */
 
-foreach ($carriers as $prefix => $carrier) {
-    echo $prefix . '|' . $carrier . PHP_EOL;
+$swapCarriers = [
+    'AMSUK LTD' => 'AMSUK',
+    'Hutchison 3G UK Ltd' => 'Hutchison', // @todo Should this be 3 or Three?
+    'EE Limited (Orange)' => 'Orange',
+    'EE Limited ( TM)' => 'EE',
+    'Telefonica UK Limited' => 'O2',
+    'Virgin Mobile Telecoms Limited' => 'Virgin Mobile',
+    'Vodafone Uk Ltd' => 'Vodafone',
+    'Limitless Mobile Ltd' => 'Limitless',
+    'TalkTalk Communications Limited' => 'TalkTalk',
+    'Lycamobile UK Limited' => 'Lycamobile',
+    'Cheers International Sales Limited' => 'Cheers',
+    '08Direct Limited' => '08Direct',
+    '24 Seven Communications Ltd' => '24 Seven',
+    'TGL Services (UK) Ltd' => 'TGL',
+    'Truphone Ltd' => 'Truphone',
+    'Manx Telecom Trading Limited' => 'Manx Telecom',
+    'Vectone Mobile Limited' => 'Vectone Mobile',
+    // @Todo This has the operational company name in Google's data?
+    'IV Response Limited' => 'IV Response',
+    'Icron Network Limited' => 'Icron Network',
+    'Dynamic Mobile Billing Limited' => 'Oxygen8',
+    // Company recently changed their name from Oxygen8 to Dynamic Mobile (Apr 2017)
+    'TeleWare PLC' => 'TeleWare',
+    'Icron Network' => 'Icron',
+    'Marathon Telecom Limited' => 'Marathon Telecom',
+    'JT (Guernsey) Limited' => 'JT',
+    'Citrus Telecommunications Ltd' => 'Citrus',
+    'aql Wholesale Limited' => 'aql',
+    'Yim Siam Telecom' => 'Yim Siam',
+    'Magrathea Telecommunications Limited' => 'Magrathea',
+    'HAY SYSTEMS LIMITED' => 'HSL',
+    'Telesign Mobile Limited' => 'Telesign',
+    'Guernsey Airtel Limited' => 'Airtel',
+    'Sure (Guernsey) Limited' => 'Sure',
+    'Jersey Airtel  Limited' => 'Airtel',
+    'Swiftnet Ltd' => 'Swiftnet',
+    'FleXtel Limited' => 'FleXtel',
+    'Airwave Solutions Ltd' => 'Airwave',
+    'Core Communication Services Ltd' => 'Core Communication',
+    'Sure (Jersey) Limited' => 'Sure',
+    'Nationwide Telephone Assistance Ltd' => 'Nationwide Telephone',
+    'Cloud9 Mobile Communications Ltd' => 'Cloud9',
+    'PageOne Communications Ltd' => 'PageOne',
+    'Telsis Systems Ltd' => 'Telsis',
+    'Relax Telecom Limited' => 'Relax',
+    'Core Telecom Limited' => 'Core Telecom',
+    'Confabulate Limited' => 'Confabulate',
+    'M P Tanner Limited t/a FIO Telecom' => 'FIO Telecom',
+    // @todo Google have M P Tanner, but they have a trading name?
+    'Premium O Limited' => 'Premium O',
+    'Syntec Limited' => 'Syntec',
+    'Plus Telecom Limited' => 'Plus',
+    'Media Telecom Ltd' => 'Media',
+    'Sure (Isle of Man) Limited' => 'Sure',
+    'Test2date B.V' => 'Test2date',
+    'Cloud9 Communications Limited' => 'Cloud9',
+    'JT (Jersey) Limited' => 'Jersey Telecom',
+    'QX Telecom Ltd' => 'QX Telecom',
+    '09 Mobile Ltd' => '09 Mobile',
+    'Alliance Technologies LLC' => 'Alliance',
+    'Lleida.net Serveis Telematics Limited' => 'Lleida.net',
+    'Nodemax Limited' => 'Nodemax',
+    'Resilient Plc' => 'Resilient',
+    'Globecom International Limited.' => 'Globecom',
+    'IPV6 Limited' => 'IPV6',
+    'LegendTel LLC' => 'LegendTel',
+    'Mars Communications Limited' => 'Mars',
+    'CFL Communications Limited' => 'CFL',
+    'Sound Advertising Ltd' => 'Mediatel',
+    'Stour Marine Limited' => 'Stour Marine',
+    'Wavecrest (UK) Ltd' => 'Wavecrest',
+    'MOBIWEB TELECOM LIMITED' => 'Mobiweb',
+    '(aq) Limited trading as aql' => 'aql',
+    'Tismi BV' => 'Tismi',
+    'Esendex Limited' => 'Esendex',
+    'Simwood eSMS Limited' => 'Simwood',
+    'BT OnePhone Limited' => 'BT OnePhone',
+    'Fogg Mobile AB' => 'Fogg',
+    'Sky UK Limited' => 'Sky',
+    'Lanonyx Telecom Limited' => 'Lanonyx',
+    'Ziron (UK) Ltd' => 'Ziron',
+    'Telecom2 Ltd' => 'Telecom2',
+    'Telecom 10 Ltd' => 'Telecom 10',
+    'Teleena UK Limited' => 'Teleena',
+    'Anywhere Sim Limited' => 'Anywhere Sim',
+    'Hanhaa Limited' => 'Hanhaa',
+];
+
+$text = fopen('data.txt', 'w');
+
+foreach ($carriers as $prefix => $carrierData) {
+    if (substr($prefix, 0, 4) == '4470') {
+        // Skip personal numbers
+        continue;
+    }
+
+    $carrier = $swapCarriers[$carrierData] ?? $carrierData;
+
+    fwrite($text, "{$prefix}|{$carrier}\n");
 }
+
+fclose($text);
+

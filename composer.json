@@ -7,6 +7,6 @@
     }
   ],
   "require": {
-    "phpexcel/phpexcel": "^1.7"
+    "phpoffice/phpexcel": "^1.7"
   }
 }
