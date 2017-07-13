@@ -271,6 +271,21 @@ $swapCarriers = [
     'Teleena UK Limited' => 'Teleena',
     'Anywhere Sim Limited' => 'Anywhere Sim',
     'Hanhaa Limited' => 'Hanhaa',
+    'Bellingham Telecommunications Limited' => 'Bellingham',
+    'Telecom North America Mobile Inc' => 'Telna',
+    'Ace Call Limited' => 'Ace Call',
+    'Telecoms Cloud Networks Limited' => 'Telecoms Cloud',
+    'Andrews & Arnold Ltd' => 'Andrews & Arnold',
+    'Synectiv Ltd' => 'Synectiv',
+    'Voxbone SA' => 'Voxbone',
+    'UK Broadband Limited' => 'UK Broadband',
+    'Voicetec Systems Ltd' => 'Voicetec',
+    'Spacetel UK Ltd' => 'Spacetel',
+    'Gamma Telecom Holdings Ltd' => 'Gamma Telecom',
+    'Premium Routing GmbH' => 'Premium Routing',
+    'Compatel Ltd' => 'Compatel',
+    'Global Reach Networks Limited' => 'GlobalReach',
+
 ];
 
 $text = fopen('data.txt', 'w');

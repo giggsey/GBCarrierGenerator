@@ -96,12 +96,12 @@
 4474178|Truphone
 4474179|Core Telecom
 4474180|Hutchison
-4474181|Bellingham Telecommunications Limited
+4474181|Bellingham
 4474182|TGL
 4474183|Tismi
 4474184|Manx Telecom
-4474185|Telecom North America Mobile Inc
-4474186|Ace Call Limited
+4474185|Telna
+4474186|Ace Call
 4474187|Teleena
 4474189|Teleena
 447419|Orange
@@ -126,17 +126,17 @@
 4474392|TalkTalk
 4474393|TalkTalk
 447440|Lycamobile
-4474408|Telecoms Cloud Networks Limited
+4474408|Telecoms Cloud
 4474409|Cloud9
 4474410|Mediatel
-4474411|Andrews & Arnold Ltd
+4474411|Andrews & Arnold
 4474413|Stour Marine
 4474414|Tismi
-4474415|Synectiv Ltd
+4474415|Synectiv
 4474416|Vodafone
-4474417|Synectiv Ltd
+4474417|Synectiv
 4474418|Core Telecom
-4474419|Voxbone SA
+4474419|Voxbone
 447442|Vodafone
 447443|Vodafone
 447444|Vodafone
@@ -149,21 +149,21 @@
 447451|Vectone Mobile
 4474512|Tismi
 4474515|Premium O
-4474516|UK Broadband Limited
-4474517|UK Broadband Limited
+4474516|UK Broadband
+4474517|UK Broadband
 447452|Manx Telecom
 4474527|Hutchison
 4474528|Hutchison
 4474529|Hutchison
 447457|Vectone Mobile
 4474572|Marathon Telecom
-4474574|Voicetec Systems Ltd
+4474574|Voicetec
 4474576|Sure
-4474577|Spacetel UK Ltd
+4474577|Spacetel
 4474578|CardBoardFish
 4474579|CardBoardFish
-447458|Gamma Telecom Holdings Ltd
-4474582|Premium Routing GmbH
+447458|Gamma Telecom
+4474582|Premium Routing
 4474583|Virgin Mobile
 4474584|Airwave
 4474585|Marathon Telecom
@@ -177,8 +177,8 @@
 447464|Vodafone
 4474650|Vectone Mobile
 4474651|Vectone Mobile
-4474653|Compatel Ltd
-4474655|Global Reach Networks Limited
+4474653|Compatel
+4474655|GlobalReach
 447466|Lycamobile
 447467|Vodafone
 447468|Vodafone
