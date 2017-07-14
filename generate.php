@@ -239,7 +239,7 @@ $swapCarriers = [
     'Sure (Isle of Man) Limited' => 'Sure',
     'Test2date B.V' => 'Test2date',
     'Cloud9 Communications Limited' => 'Cloud9',
-    'JT (Jersey) Limited' => 'Jersey Telecom',
+    'JT (Jersey) Limited' => 'JT',
     'QX Telecom Ltd' => 'QX Telecom',
     '09 Mobile Ltd' => '09 Mobile',
     'Alliance Technologies LLC' => 'Alliance',
@@ -285,6 +285,12 @@ $swapCarriers = [
     'Global Reach Networks Limited' => 'GlobalReach',
 
 ];
+
+ksort($swapCarriers);
+
+foreach ($swapCarriers as $original => $new) {
+    echo "#  - {$original}: {$new}\n";
+}
 
 $text = fopen('data.txt', 'w');
 
