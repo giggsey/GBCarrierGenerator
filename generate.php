@@ -186,7 +186,7 @@ ksort($carriers, SORT_STRING);
 
 $swapCarriers = [
     'AMSUK LTD' => 'AMSUK',
-    'Hutchison 3G UK Ltd' => 'Hutchison', // @todo Should this be 3 or Three?
+    'Hutchison 3G UK Ltd' => 'Three',
     'EE Limited (Orange)' => 'Orange',
     'EE Limited ( TM)' => 'EE',
     'Telefonica UK Limited' => 'O2',
@@ -202,7 +202,6 @@ $swapCarriers = [
     'Truphone Ltd' => 'Truphone',
     'Manx Telecom Trading Limited' => 'Manx Telecom',
     'Vectone Mobile Limited' => 'Vectone Mobile',
-    // @Todo This has the operational company name in Google's data?
     'IV Response Limited' => 'IV Response',
     'Icron Network Limited' => 'Icron Network',
     'Dynamic Mobile Billing Limited' => 'Oxygen8',
@@ -233,7 +232,6 @@ $swapCarriers = [
     'Core Telecom Limited' => 'Core Telecom',
     'Confabulate Limited' => 'Confabulate',
     'M P Tanner Limited t/a FIO Telecom' => 'FIO Telecom',
-    // @todo Google have M P Tanner, but they have a trading name?
     'Premium O Limited' => 'Premium O',
     'Syntec Limited' => 'Syntec',
     'Plus Telecom Limited' => 'Plus',
