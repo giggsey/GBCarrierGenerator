@@ -81,10 +81,10 @@ foreach ($carrierURLs as $carrierURL) {
 
         if ($allocated == 'Allocated') {
             $carrier = $worksheet->getCellByColumnAndRow($commsProviderColumn, $row->getRowIndex())->getValue();
-            $date = $worksheet->getCellByColumnAndRow($changeColumn, $row->getRowIndex())->getValue();
-
-            $UNIX_DATE = ($date - 25569) * 86400;
-            $date = gmdate('Y-m-d', $UNIX_DATE);
+//            $date = $worksheet->getCellByColumnAndRow($changeColumn, $row->getRowIndex())->getValue();
+//
+//            $UNIX_DATE = ($date - 25569) * 86400;
+//            $date = gmdate('Y-m-d', $UNIX_DATE);
             /*
              * Ensure it's a permitted prefix
              */
