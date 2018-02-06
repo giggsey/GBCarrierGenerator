@@ -15,7 +15,7 @@ require __DIR__ . '/vendor/autoload.php';
  */
 
 $carrierURLs = [
-    "http://www.ofcom.org.uk/static/numbering/S7.xls",
+    "http://www.ofcom.org.uk/static/numbering/S7.xlsx",
 ];
 
 $carriers = [];
@@ -36,7 +36,7 @@ foreach ($carrierURLs as $carrierURL) {
         exit;
     }
 
-    $excel = PHPExcel_IOFactory::load($localFileName);
+    $excel = \PhpOffice\PhpSpreadsheet\IOFactory::load($localFileName);
 
     $worksheet = $excel->getActiveSheet();
 
@@ -52,7 +52,7 @@ foreach ($carrierURLs as $carrierURL) {
             $changeColumn = null;
             $statusColumn = null;
 
-            $column = 0;
+            $column = 1;
             $data = $worksheet->getCellByColumnAndRow($column, $row->getRowIndex())->getValue();
             while ($data != '') {
                 if ($data == 'Communications Provider') {
@@ -74,13 +74,13 @@ foreach ($carrierURLs as $carrierURL) {
             continue;
         }
 
-        $prefix = trim($worksheet->getCellByColumnAndRow(0, $row->getRowIndex())->getValue())
-            . trim($worksheet->getCellByColumnAndRow(1, $row->getRowIndex())->getValue());
+        $prefix = trim($worksheet->getCellByColumnAndRow(1, $row->getRowIndex())->getValue())
+            . trim($worksheet->getCellByColumnAndRow(2, $row->getRowIndex())->getValue());
 
         $allocated = trim($worksheet->getCellByColumnAndRow($statusColumn, $row->getRowIndex())->getValue());
 
         if ($allocated == 'Allocated') {
-            $carrier = $worksheet->getCellByColumnAndRow($commsProviderColumn, $row->getRowIndex())->getValue();
+            $carrier = (string)$worksheet->getCellByColumnAndRow($commsProviderColumn, $row->getRowIndex())->getValue();
 //            $date = $worksheet->getCellByColumnAndRow($changeColumn, $row->getRowIndex())->getValue();
 //
 //            $UNIX_DATE = ($date - 25569) * 86400;
@@ -185,7 +185,6 @@ ksort($carriers, SORT_STRING);
  */
 
 $swapCarriers = [
-    'AMSUK LTD' => 'AMSUK',
     'Hutchison 3G UK Ltd' => 'Three',
     'EE Limited (Orange)' => 'Orange',
     'EE Limited ( TM)' => 'EE',
@@ -207,12 +206,10 @@ $swapCarriers = [
     'Dynamic Mobile Billing Limited' => 'Oxygen8',
     // Company recently changed their name from Oxygen8 to Dynamic Mobile (Apr 2017)
     'TeleWare PLC' => 'TeleWare',
-    'Icron Network' => 'Icron',
     'Marathon Telecom Limited' => 'Marathon Telecom',
     'JT (Guernsey) Limited' => 'JT',
     'Citrus Telecommunications Ltd' => 'Citrus',
     'aql Wholesale Limited' => 'aql',
-    'Yim Siam Telecom' => 'Yim Siam',
     'Magrathea Telecommunications Limited' => 'Magrathea',
     'HAY SYSTEMS LIMITED' => 'HSL',
     'Telesign Mobile Limited' => 'Telesign',
@@ -227,7 +224,7 @@ $swapCarriers = [
     'Nationwide Telephone Assistance Ltd' => 'Nationwide Telephone',
     'Cloud9 Mobile Communications Ltd' => 'Cloud9',
     'PageOne Communications Ltd' => 'PageOne',
-    'Telsis Systems Ltd' => 'Telsis',
+    'Telency Limited' => 'Telency', // Rebranded from Telsis Systems
     'Relax Telecom Limited' => 'Relax',
     'Core Telecom Limited' => 'Core Telecom',
     'Confabulate Limited' => 'Confabulate',
@@ -238,11 +235,8 @@ $swapCarriers = [
     'Media Telecom Ltd' => 'Media',
     'Sure (Isle of Man) Limited' => 'Sure',
     'Test2date B.V' => 'Test2date',
-    'Cloud9 Communications Limited' => 'Cloud9',
     'JT (Jersey) Limited' => 'JT',
     'QX Telecom Ltd' => 'QX Telecom',
-    '09 Mobile Ltd' => '09 Mobile',
-    'Alliance Technologies LLC' => 'Alliance',
     'Lleida.net Serveis Telematics Limited' => 'Lleida.net',
     'Nodemax Limited' => 'Nodemax',
     'Resilient Plc' => 'Resilient',
@@ -283,8 +277,9 @@ $swapCarriers = [
     'Premium Routing GmbH' => 'Premium Routing',
     'Compatel Ltd' => 'Compatel',
     'Global Reach Networks Limited' => 'GlobalReach',
-
 ];
+
+$unusedCarriers = $swapCarriers;
 
 ksort($swapCarriers);
 
@@ -303,7 +298,15 @@ foreach ($carriers as $prefix => $carrierData) {
     $carrier = $swapCarriers[$carrierData] ?? $carrierData;
 
     fwrite($text, "{$prefix}|{$carrier}\n");
+
+    unset($unusedCarriers[$carrierData]);
 }
 
 fclose($text);
+
+if (count($unusedCarriers) > 0) {
+    echo "Notice! We have unused carriers in our list!:\n";
+
+    echo implode("\n", array_keys($unusedCarriers));
+}
 

@@ -1,12 +1,14 @@
 447106|O2
 447107|O2
-447300|EE
-447301|EE
-447302|EE
-447303|EE
-447304|EE
+44730|EE
 447305|Virgin Mobile
 447306|Virgin Mobile
+447307|Three
+447308|Three
+447309|Three
+447310|Three
+447311|Three
+447312|Three
 447340|Vodafone
 447341|Vodafone
 447342|Vodafone
@@ -19,6 +21,8 @@
 4473684|Sky
 4473685|Sky
 4473686|Sky
+4473687|Vodafone
+4473690|Telet Research (N.I.) Limited
 4473699|Anywhere Sim
 447375|EE
 447376|EE
@@ -26,8 +30,15 @@
 447378|Three
 4473780|Limitless
 447379|Vodafone
-447380|Three
-4473800|AMSUK
+4473801|Three
+4473802|Three
+4473803|Three
+4473804|Three
+4473805|Three
+4473806|Three
+4473807|Three
+4473808|Three
+4473809|Three
 447381|O2
 447382|O2
 447383|Three
@@ -38,10 +49,6 @@
 447388|Vodafone
 4473890|Three
 4473891|Three
-4473892|TalkTalk
-4473893|TalkTalk
-4473894|TalkTalk
-4473895|TalkTalk
 4473896|Hanhaa
 4473897|Vodafone
 4473898|Vodafone
@@ -125,9 +132,7 @@
 447437|Vodafone
 447438|Lycamobile
 4474390|TalkTalk
-4474391|TalkTalk
 4474392|TalkTalk
-4474393|TalkTalk
 447440|Lycamobile
 4474408|Telecoms Cloud
 4474409|Cloud9
@@ -148,16 +153,24 @@
 447447|Three
 447448|Lycamobile
 447449|Three
-44745|Three
-447451|Vectone Mobile
+447450|Three
+4474510|Vectone Mobile
+4474511|Vectone Mobile
 4474512|Tismi
-4474515|Premium O
+4474513|Vectone Mobile
+4474514|Vectone Mobile
 4474516|UK Broadband
 4474517|UK Broadband
+4474518|Vectone Mobile
+4474519|Vectone Mobile
 447452|Manx Telecom
 4474527|Three
 4474528|Three
 4474529|Three
+447453|Three
+447454|Three
+447455|Three
+447456|Three
 447457|Vectone Mobile
 4474572|Marathon Telecom
 4474574|Voicetec
@@ -242,8 +255,11 @@
 447529|Orange
 447530|Orange
 447531|Orange
-447532|Orange
-4475325|SMSRelay AG
+4475320|Orange
+4475321|Orange
+4475322|Orange
+4475323|Orange
+4475324|Orange
 4475326|Three
 4475327|Three
 4475328|Three
@@ -285,8 +301,6 @@
 4475599|Resilient
 44756|O2
 447570|Vodafone
-4475710|09 Mobile
-4475718|Alliance
 447572|EE
 447573|EE
 447574|EE
@@ -304,7 +318,6 @@
 447586|Vodafone
 447587|Vodafone
 447588|Three
-4475890|Yim Siam
 4475891|Oxygen8
 4475892|Oxygen8
 4475893|Oxygen8
@@ -339,7 +352,6 @@
 4476406|PageOne
 4476407|PageOne
 4476411|Orange
-4476433|Yim Siam
 4476440|O2
 4476441|O2
 4476446|Media
@@ -378,7 +390,7 @@
 4476699|O2
 4476770|24 Seven
 4476772|Relax
-4476776|Telsis
+4476776|Telency
 4476778|Core Telecom
 4476810|PageOne
 4476814|PageOne
@@ -484,7 +496,6 @@
 447821|O2
 4478220|FleXtel
 4478221|Swiftnet
-4478222|TalkTalk
 4478224|aql
 4478225|Icron Network
 4478226|aql
@@ -580,10 +591,13 @@
 4478927|O2
 4478928|O2
 4478929|O2
-447893|O2
 4478930|Magrathea
 4478931|24 Seven
-4478933|Yim Siam
+4478932|O2
+4478934|O2
+4478935|O2
+4478936|O2
+4478937|O2
 4478938|aql
 4478939|Citrus
 447894|O2
