@@ -192,7 +192,6 @@ $swapCarriers = [
     'Virgin Mobile Telecoms Limited' => 'Virgin Mobile',
     'Vodafone Uk Ltd' => 'Vodafone',
     'Limitless Mobile Ltd' => 'Limitless',
-    'TalkTalk Communications Limited' => 'TalkTalk',
     'Lycamobile UK Limited' => 'Lycamobile',
     'Cheers International Sales Limited' => 'Cheers',
     '08Direct Limited' => '08Direct',
@@ -275,6 +274,9 @@ $swapCarriers = [
     'Premium Routing GmbH' => 'Premium Routing',
     'Compatel Ltd' => 'Compatel',
     'Global Reach Networks Limited' => 'GlobalReach',
+    'Telet Research (N.I.) Limited' => 'Telet Research',
+    'Simetric Telecom Ltd' => 'Simetric Telecom',
+    'Bluewave Communications Limited' => 'Bluewave Communications',
 ];
 
 $unusedCarriers = $swapCarriers;
